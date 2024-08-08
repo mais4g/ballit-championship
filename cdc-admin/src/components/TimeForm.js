@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const TimeForm = ({ addTime, existingTimes }) => {
+const TimeForm = ({ addTime, existingTimes = [] }) => {
     const [nome, setNome] = useState('');
     const [grito, setGrito] = useState('');
     const [ano, setAno] = useState('');

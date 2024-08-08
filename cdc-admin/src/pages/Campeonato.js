@@ -1,15 +1,14 @@
-// pages/campeonato.js
 import React, { useState } from 'react';
 import TimeForm from '../components/TimeForm';
 import Partida from '../components/Partida';
 import TabelaFinal from '../components/TabelaFinal';
-import Grusht from '../components/Grusht';
+import GrushtPage from './Grusht';
 
 const CampeonatoPage = () => {
     const [times, setTimes] = useState([]);
     const [fases, setFases] = useState([]);
     const [faseAtual, setFaseAtual] = useState(0);
-    const [partidaAtual, setPartidaAtual] = useState(null);
+    const [partidaAtual, setPartidaAtual] = useState(0);
     const [campeonatoIniciado, setCampeonatoIniciado] = useState(false);
     const [vencedorFinal, setVencedorFinal] = useState(null);
     const [emGrusht, setEmGrusht] = useState(false);
@@ -37,19 +36,23 @@ const CampeonatoPage = () => {
 
         setFases(prevFases => [...prevFases, novasPartidas]);
         setCampeonatoIniciado(true);
-        setPartidaAtual(novasPartidas[0]);
+        setPartidaAtual(0);
+    };
+
+    const selecionarPartida = (index) => {
+        setPartidaAtual(index);
     };
 
     const encerrarPartida = (vencedor, resultado) => {
         const fase = fases[faseAtual];
-        const novaFase = fase.map(partida => (partida === partidaAtual ? { ...partida, resultado } : partida));
+        const novaFase = fase.map((partida, index) => (index === partidaAtual ? { ...partida, resultado } : partida));
         const novasFases = [...fases];
         novasFases[faseAtual] = novaFase;
         setFases(novasFases);
 
         if (resultado.timeA.pontosTotais === resultado.timeB.pontosTotais) {
             setEmGrusht(true);
-            setPartidaAtual({ timeA: resultado.timeA, timeB: resultado.timeB });
+            setPartidaAtual(partidaAtual);
             return;
         }
 
@@ -79,26 +82,27 @@ const CampeonatoPage = () => {
 
         const proximaPartida = novaFase.find(partida => !partida.resultado);
         if (proximaPartida) {
-            setPartidaAtual(proximaPartida);
+            setPartidaAtual(novaFase.indexOf(proximaPartida));
         } else if (faseAtual + 1 < fases.length) {
             setFaseAtual(faseAtual + 1);
-            setPartidaAtual(fases[faseAtual + 1][0]);
+            setPartidaAtual(0);
         } else {
             setVencedorFinal(timesAtualizados.reduce((prev, current) => (prev.pontosTotais > current.pontosTotais ? prev : current)));
         }
     };
 
-    const encerrarGrusht = (decibelLevels) => {
+    const iniciarGrusht = () => {
+        setEmGrusht(true);
+    };
+
+    const encerrarGrusht = () => {
         setEmGrusht(false);
         const fase = fases[faseAtual];
-        const novaFase = fase.map(partida => {
-            if (partida === partidaAtual) {
-                const [vencedor] = Object.entries(decibelLevels).reduce((max, [nome, dB]) => 
-                    dB > (max.dB || 0) ? { nome, dB } : max, {});
-                
+        const novaFase = fase.map((partida, index) => {
+            if (index === partidaAtual) {
                 const resultado = {
-                    timeA: { ...partida.timeA, pontosTotais: partida.timeA.pontosTotais + (partida.timeA.nome === vencedor ? 3 : 0) },
-                    timeB: { ...partida.timeB, pontosTotais: partida.timeB.pontosTotais + (partida.timeB.nome === vencedor ? 3 : 0) },
+                    timeA: { ...partida.timeA, pontosTotais: partida.timeA.pontosTotais + 3 },
+                    timeB: { ...partida.timeB, pontosTotais: partida.timeB.pontosTotais + 3 },
                 };
                 return { ...partida, resultado };
             } else {
@@ -110,7 +114,7 @@ const CampeonatoPage = () => {
         setFases(novasFases);
 
         const timesAtualizados = times.map(time => {
-            if (time.nome === partidaAtual.timeA.nome || time.nome === partidaAtual.timeB.nome) {
+            if (time.nome === fase[partidaAtual].timeA.nome || time.nome === fase[partidaAtual].timeB.nome) {
                 return { ...time, pontosTotais: time.pontosTotais + 3 };
             } else {
                 return time;
@@ -121,12 +125,24 @@ const CampeonatoPage = () => {
 
         const proximaPartida = novaFase.find(partida => !partida.resultado);
         if (proximaPartida) {
-            setPartidaAtual(proximaPartida);
+            setPartidaAtual(novaFase.indexOf(proximaPartida));
         } else if (faseAtual + 1 < fases.length) {
             setFaseAtual(faseAtual + 1);
-            setPartidaAtual(fases[faseAtual + 1][0]);
+            setPartidaAtual(0);
         } else {
             setVencedorFinal(timesAtualizados.reduce((prev, current) => (prev.pontosTotais > current.pontosTotais ? prev : current)));
+        }
+    };
+
+    const partidaAnterior = () => {
+        if (partidaAtual > 0) {
+            setPartidaAtual(partidaAtual - 1);
+        }
+    };
+
+    const proximaPartida = () => {
+        if (partidaAtual < fases[faseAtual].length - 1) {
+            setPartidaAtual(partidaAtual + 1);
         }
     };
 
@@ -151,57 +167,39 @@ const CampeonatoPage = () => {
                 <>
                     <div>
                         <h2>Partidas</h2>
-                        <ul>
-                            {fases[faseAtual].map((partida, index) => (
-                                <li key={index}>
-                                    <button onClick={() => setPartidaAtual(partida)}>
-                                        {partida.timeA.nome} vs {partida.timeB.nome}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div>
-                        <h2>Pontuação dos Times na Partida Atual</h2>
-                        {partidaAtual && (
-                            <>
-                                <p>{partidaAtual.timeA.nome}: {partidaAtual.timeA.pontosTotais} pontos</p>
-                                <p>{partidaAtual.timeB.nome}: {partidaAtual.timeB.pontosTotais} pontos</p>
-                            </>
+                        {fases[faseAtual] && (
+                            <ul>
+                                {fases[faseAtual].map((partida, index) => (
+                                    <li key={index}>
+                                        <button onClick={() => selecionarPartida(index)}>
+                                            {partida.timeA.nome} vs {partida.timeB.nome}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         )}
                     </div>
+                    {fases[faseAtual] && fases[faseAtual][partidaAtual] && (
+                        <div>
+                            <h2>Pontuação dos Times na Partida Atual</h2>
+                            <p>{fases[faseAtual][partidaAtual].timeA.nome}: {fases[faseAtual][partidaAtual].timeA.pontosTotais} pontos</p>
+                            <p>{fases[faseAtual][partidaAtual].timeB.nome}: {fases[faseAtual][partidaAtual].timeB.pontosTotais} pontos</p>
+                            <button onClick={partidaAnterior} disabled={partidaAtual === 0}>Anterior</button>
+                            <button onClick={proximaPartida} disabled={partidaAtual === fases[faseAtual].length - 1}>Próximo</button>
+                        </div>
+                    )}
                 </>
             )}
-            {partidaAtual && !emGrusht && (
-                <Partida
-                    timeA={partidaAtual.timeA}
-                    timeB={partidaAtual.timeB}
-                    encerrarPartida={encerrarPartida}
-                    iniciarGrusht={() => setEmGrusht(true)}
-                />
+            {fases[faseAtual] && fases[faseAtual][partidaAtual] && !emGrusht && (
+                <Partida timeA={fases[faseAtual][partidaAtual].timeA} timeB={fases[faseAtual][partidaAtual].timeB} encerrarPartida={encerrarPartida} iniciarGrusht={iniciarGrusht} />
             )}
-            {emGrusht && partidaAtual && (
-                <Grusht
-                    timeA={partidaAtual.timeA}
-                    timeB={partidaAtual.timeB}
-                    encerrarGrusht={encerrarGrusht}
-                />
+            {emGrusht && (
+                <GrushtPage timeA={fases[faseAtual][partidaAtual].timeA} timeB={fases[faseAtual][partidaAtual].timeB} encerrarGrusht={encerrarGrusht} />
             )}
             {vencedorFinal && (
                 <div>
                     <h2>Campeão: {vencedorFinal.nome}</h2>
                     <p>Grito de Guerra: {vencedorFinal.grito}</p>
-                </div>
-            )}
-            {campeonatoIniciado && !vencedorFinal && (
-                <div>
-                    <h2>Advrungh</h2>
-                    {times.map(time => (
-                        <div key={time.nome}>
-                            <h3>{time.nome}</h3>
-                            <button onClick={() => console.log(`Adicionar Advrungh para ${time.nome}`)}>Adicionar Advrungh</button>
-                        </div>
-                    ))}
                 </div>
             )}
             {vencedorFinal && <TabelaFinal times={times} />}

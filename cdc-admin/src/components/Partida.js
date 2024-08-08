@@ -1,7 +1,6 @@
-// components/Partida.js
 import React, { useState, useEffect } from 'react';
 
-const Partida = ({ timeA, timeB, encerrarPartida, iniciarGrusht, emGrusht }) => {
+const Partida = ({ timeA, timeB, encerrarPartida, iniciarGrusht }) => {
     const [pontosTimeA, setPontosTimeA] = useState(timeA.pontosTotais);
     const [pontosTimeB, setPontosTimeB] = useState(timeB.pontosTotais);
     const [blotsA, setBlotsA] = useState(timeA.blots);
@@ -47,14 +46,17 @@ const Partida = ({ timeA, timeB, encerrarPartida, iniciarGrusht, emGrusht }) => 
     };
 
     const handleEncerrarPartida = () => {
-        if (pontosTimeA === pontosTimeB) {
+        const pontosFinaisA = blotsA + plifsA - advrunghsA;
+        const pontosFinaisB = blotsB + plifsB - advrunghsB;
+
+        if (pontosFinaisA === pontosFinaisB) {
             iniciarGrusht();
         } else {
             const resultado = {
-                timeA: { ...timeA, blots: blotsA, plifs: plifsA, advrunghs: advrunghsA, pontosTotais: blotsA + plifsA - advrunghsA },
-                timeB: { ...timeB, blots: blotsB, plifs: plifsB, advrunghs: advrunghsB, pontosTotais: blotsB + plifsB - advrunghsB },
+                timeA: { ...timeA, blots: blotsA, plifs: plifsA, advrunghs: advrunghsA, pontosTotais: pontosFinaisA },
+                timeB: { ...timeB, blots: blotsB, plifs: plifsB, advrunghs: advrunghsB, pontosTotais: pontosFinaisB },
             };
-            encerrarPartida(pontosTimeA > pontosTimeB ? timeA : timeB, resultado);
+            encerrarPartida(pontosFinaisA > pontosFinaisB ? timeA : timeB, resultado);
         }
     };
 
@@ -66,18 +68,18 @@ const Partida = ({ timeA, timeB, encerrarPartida, iniciarGrusht, emGrusht }) => 
                 <p>Pontos: {pontosTimeA}</p>
                 <div>
                     <label>Blots: {blotsA} </label>
-                    <button onClick={() => handleBlotsChange('A', 1)} disabled={emGrusht}>+</button>
-                    <button onClick={() => handleBlotsChange('A', -1)} disabled={emGrusht}>-</button>
+                    <button onClick={() => handleBlotsChange('A', 1)}>+</button>
+                    <button onClick={() => handleBlotsChange('A', -1)}>-</button>
                 </div>
                 <div>
                     <label>Plifs: {plifsA} </label>
-                    <button onClick={() => handlePlifsChange('A', 1)} disabled={emGrusht}>+</button>
-                    <button onClick={() => handlePlifsChange('A', -1)} disabled={emGrusht}>-</button>
+                    <button onClick={() => handlePlifsChange('A', 1)}>+</button>
+                    <button onClick={() => handlePlifsChange('A', -1)}>-</button>
                 </div>
                 <div>
                     <label>Advrunghs: {advrunghsA} </label>
-                    <button onClick={() => handleAdvrunghsChange('A', 1)} disabled={emGrusht}>+</button>
-                    <button onClick={() => handleAdvrunghsChange('A', -1)} disabled={emGrusht}>-</button>
+                    <button onClick={() => handleAdvrunghsChange('A', 1)}>+</button>
+                    <button onClick={() => handleAdvrunghsChange('A', -1)}>-</button>
                 </div>
             </div>
             <div>
@@ -85,21 +87,21 @@ const Partida = ({ timeA, timeB, encerrarPartida, iniciarGrusht, emGrusht }) => 
                 <p>Pontos: {pontosTimeB}</p>
                 <div>
                     <label>Blots: {blotsB} </label>
-                    <button onClick={() => handleBlotsChange('B', 1)} disabled={emGrusht}>+</button>
-                    <button onClick={() => handleBlotsChange('B', -1)} disabled={emGrusht}>-</button>
+                    <button onClick={() => handleBlotsChange('B', 1)}>+</button>
+                    <button onClick={() => handleBlotsChange('B', -1)}>-</button>
                 </div>
                 <div>
                     <label>Plifs: {plifsB} </label>
-                    <button onClick={() => handlePlifsChange('B', 1)} disabled={emGrusht}>+</button>
-                    <button onClick={() => handlePlifsChange('B', -1)} disabled={emGrusht}>-</button>
+                    <button onClick={() => handlePlifsChange('B', 1)}>+</button>
+                    <button onClick={() => handlePlifsChange('B', -1)}>-</button>
                 </div>
                 <div>
                     <label>Advrunghs: {advrunghsB} </label>
-                    <button onClick={() => handleAdvrunghsChange('B', 1)} disabled={emGrusht}>+</button>
-                    <button onClick={() => handleAdvrunghsChange('B', -1)} disabled={emGrusht}>-</button>
+                    <button onClick={() => handleAdvrunghsChange('B', 1)}>+</button>
+                    <button onClick={() => handleAdvrunghsChange('B', -1)}>-</button>
                 </div>
             </div>
-            <button onClick={handleEncerrarPartida} disabled={emGrusht}>Encerrar Partida</button>
+            <button onClick={handleEncerrarPartida}>Encerrar Partida</button>
         </div>
     );
 };
