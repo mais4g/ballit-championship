@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# BALLIT CHAMPIONSHIP
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ballit é um sistema para gerenciar um campeonato fictício. O sistema permite o usuário cadastrar o time, organiza automaticamente as fases do campeonato, administra as partidas e determina o campeão.
 
-## Available Scripts
+1. Cadastro de times
+- O sistema permite o cadastro dos times, deve-se incluir o Nome do Time, o Grito de Guerra e o Ano de fundação
+- O campeonato deve ter entre 8 e 16 times.
+- O número de times cadastrados deve ser par.
+- Não deve ter times com nomes ou grito de guerras iguais.
 
-In the project directory, you can run:
+2. Início do Campeonato
+- Após o cadastro, o campeonato pode ser iniciado. O sistema sorteia as duplas de times.
+- As duplas disputarão até sobrar somente um time, que será o vencedor.
 
-### `npm start`
+3. Gestão de fases
+- O sistema controla as fases, sorteia as duplas, permite escolher entre as partidas aidna não ocorridas e avança automaticamente quando a fase é concluída.
+  
+ 4. Administração de Partidas
+ - Cada partida é administrada em detalhes, com exibição dos times, registro de pontos e encerramento
+ - Cada time começa com 50 pontos
+ - "Blot" Vale 5 pontos
+ - "Plif" Vale 1 ponto
+ - Em caso de empate o "Grusht", onde as torcidas competem para ver quem grita mais alto, vale 3 pontos adicionais
+  
+ 5. Penalidades
+ - A qualquer momento do campeonato, se o time ou a torcida cometer uma irregularidade, perde 10 pontos
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+ 6. Resultados Finais
+ - Ao término do campeonato, o sistema exibe uma tabela classificatória com o tato de pontos
+ - O grito de guerra é mostrado acima da tabela
+ 
+    
+## Como Executar o Projeto
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Requisitos
+- Node.js
+- NPM ou Yarn

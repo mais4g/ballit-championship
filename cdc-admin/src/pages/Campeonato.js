@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import TimeForm from '../components/TimeForm';
 import Partida from '../components/Partida';
 import TabelaFinal from '../components/TabelaFinal';
-import GrushtPage from './Grusht';
+import Grusht from './Grusht';
+
 
 const CampeonatoPage = () => {
     const [times, setTimes] = useState([]);
@@ -50,29 +51,18 @@ const CampeonatoPage = () => {
         novasFases[faseAtual] = novaFase;
         setFases(novasFases);
 
+        // Verifica se é empate para iniciar Grusht
         if (resultado.timeA.pontosTotais === resultado.timeB.pontosTotais) {
             setEmGrusht(true);
-            setPartidaAtual(partidaAtual);
             return;
         }
 
+        // Atualiza os times com o resultado
         const timesAtualizados = times.map(time => {
             if (time.nome === resultado.timeA.nome) {
-                return {
-                    ...time,
-                    blots: resultado.timeA.blots,
-                    plifs: resultado.timeA.plifs,
-                    advrunghs: resultado.timeA.advrunghs,
-                    pontosTotais: resultado.timeA.pontosTotais,
-                };
+                return { ...time, ...resultado.timeA };
             } else if (time.nome === resultado.timeB.nome) {
-                return {
-                    ...time,
-                    blots: resultado.timeB.blots,
-                    plifs: resultado.timeB.plifs,
-                    advrunghs: resultado.timeB.advrunghs,
-                    pontosTotais: resultado.timeB.pontosTotais,
-                };
+                return { ...time, ...resultado.timeB };
             } else {
                 return time;
             }
@@ -149,6 +139,7 @@ const CampeonatoPage = () => {
     return (
         <div>
             <h1>Ballit Championship</h1>
+
             {!campeonatoIniciado && (
                 <>
                     <TimeForm addTime={addTime} existingTimes={times} />
@@ -163,6 +154,7 @@ const CampeonatoPage = () => {
                     {times.length > 1 && <button onClick={iniciarFase}>Iniciar Campeonato</button>}
                 </>
             )}
+
             {campeonatoIniciado && !emGrusht && (
                 <>
                     <div>
@@ -190,18 +182,31 @@ const CampeonatoPage = () => {
                     )}
                 </>
             )}
+
             {fases[faseAtual] && fases[faseAtual][partidaAtual] && !emGrusht && (
-                <Partida timeA={fases[faseAtual][partidaAtual].timeA} timeB={fases[faseAtual][partidaAtual].timeB} encerrarPartida={encerrarPartida} iniciarGrusht={iniciarGrusht} />
+                <Partida 
+                    timeA={fases[faseAtual][partidaAtual].timeA} 
+                    timeB={fases[faseAtual][partidaAtual].timeB} 
+                    encerrarPartida={encerrarPartida} 
+                    iniciarGrusht={iniciarGrusht} 
+                />
             )}
+
             {emGrusht && (
-                <GrushtPage timeA={fases[faseAtual][partidaAtual].timeA} timeB={fases[faseAtual][partidaAtual].timeB} encerrarGrusht={encerrarGrusht} />
+                <Grusht
+                    timeA={fases[faseAtual][partidaAtual].timeA}
+                    timeB={fases[faseAtual][partidaAtual].timeB}
+                    encerrarGrusht={encerrarGrusht} // Certifique-se de que esta função está sendo corretamente passada
+                />
             )}
+
             {vencedorFinal && (
                 <div>
                     <h2>Campeão: {vencedorFinal.nome}</h2>
                     <p>Grito de Guerra: {vencedorFinal.grito}</p>
                 </div>
             )}
+
             {vencedorFinal && <TabelaFinal times={times} />}
         </div>
     );
